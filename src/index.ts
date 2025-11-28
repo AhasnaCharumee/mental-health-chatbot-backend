@@ -2,13 +2,28 @@ import dotenv from 'dotenv';
 dotenv.config();
 import cors from "cors";
 
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import chatbotRoutes from "./routes/chatbot.routes";
 
 const app = express();
 
 app.use(cors());  // <<< මේක දාන්න, cors enable වෙනවා
 app.use(express.json());
+
+// Explicit CORS headers and preflight handling (helps on some serverless platforms)
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const origin = process.env.CORS_ORIGIN || "*";
+  res.header("Access-Control-Allow-Origin", origin);
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 // Routes
 app.use("/api/chatbot", chatbotRoutes);
