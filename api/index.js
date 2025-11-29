@@ -5,7 +5,9 @@
 const DEFAULT_ALLOWLIST = [
   'http://localhost:3001',
   'http://localhost:3000',
-  'https://mental-health-chatbot-frontend-g1ginbxyr.vercel.app'
+  'https://mental-health-chatbot-frontend-g1ginbxqle.vercel.app',
+  'https://mental-health-chatbot-frontend-g1ginbxyr.vercel.app',
+  'https://mental-health-chatbot-frontend-dq4daxqle.vercel.app'
 ];
 
 function getAllowedOrigins() {
@@ -19,7 +21,9 @@ const allowedOrigins = getAllowedOrigins();
 
 module.exports = (req, res) => {
   try {
-    const origin = req.headers.origin;
+    const origin = req.headers.origin || '';
+    console.log('api wrapper request:', req.method, req.url, 'origin=', origin);
+
     const allowed = allowedOrigins.includes(origin) ? origin : (process.env.CORS_ORIGIN || '*');
 
     res.setHeader('Access-Control-Allow-Origin', allowed);
