@@ -16,28 +16,16 @@ function getAllowedOrigins() {
 const allowedOrigins = getAllowedOrigins();
 
 module.exports = (req, res) => {
-  try {
-    const origin = req.headers.origin || '';
-
-    const allowed = allowedOrigins.includes(origin)
-      ? origin
-      : "*";
-
-    res.setHeader("Access-Control-Allow-Origin", allowed);
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin, Accept");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-
-    if (req.method === "OPTIONS") {
-      res.statusCode = 204;
-      return res.end();
-    }
-
-    const expressApp = require("../dist/index").default;
-    return expressApp(req, res);
-
-  } catch (err) {
-    res.statusCode = 500;
-    res.setHeader("Content-Type", "text/plain");
-    return res.end("Server error or dist/index.js missing. Run `npm run build`.");
+  if (req.method === 'OPTIONS') {
+    res.statusCode = 204;
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    return res.end();
   }
+  
+  const app = require('../dist/index').default;
+  return app(req, res);
 };
+
+
