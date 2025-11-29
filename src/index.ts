@@ -10,6 +10,8 @@ const app = express();
 app.use(cors({
   origin: "*",
 }));
+// Ensure Express explicitly responds to OPTIONS preflight for all routes
+app.options('*', cors({ origin: '*' }));
 app.use(express.json());
 
 // Routes
