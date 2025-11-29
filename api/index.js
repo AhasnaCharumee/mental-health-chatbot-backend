@@ -5,7 +5,9 @@ const DEFAULT_ALLOWLIST = [
   'http://localhost:3001',
   'https://mental-health-chatbot-frontend-g1ginbxqle.vercel.app',
   'https://mental-health-chatbot-frontend-g1ginbxyr.vercel.app',
-  'https://mental-health-chatbot-frontend-dq4daxqle.vercel.app'
+  'https://mental-health-chatbot-frontend-dq4daxqle.vercel.app',
+  'https://mental-health-chatbot-frontend-beta.vercel.app',
+  'https://mental-health-chatbot-frontend-1teqhfw1v.vercel.app'
 ];
 
 function getAllowedOrigins() {
@@ -27,6 +29,13 @@ function isOriginAllowed(origin) {
 module.exports = (req, res) => {
   try {
     const origin = req.headers.origin;
+    // Log incoming requests to help debug CORS/routing in Vercel logs
+    // (appears in Vercel deployment logs when requests hit the wrapper)
+    try {
+      console.log(`Wrapper request - origin=${origin} method=${req.method} url=${req.url}`);
+    } catch (e) {
+      // ignore logging errors
+    }
 
     // choose what to return for Access-Control-Allow-Origin
     if (isOriginAllowed(origin)) {
