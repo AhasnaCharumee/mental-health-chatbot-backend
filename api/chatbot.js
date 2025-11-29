@@ -1,32 +1,24 @@
-import axios from "axios";
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "https://mental-health-chatbot-frontend.vercel.app",
+  "https://mental-health-chatbot-frontend-*.*.vercel.app",
+];
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Only POST allowed" });
+module.exports = (req, res) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
   }
 
-  const { message } = req.body;
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
 
-  try {
-   const response = await axios.post(
-  "https://api.openai.com/v1/chat/completions",
-  {
-    model: "gpt-4o-mini",  // fix this model name to a valid one like "gpt-4o-mini" or "gpt-3.5-turbo"
-    messages: [
-      { role: "system", content: "You are a mental health assistant." },
-      { role: "user", content: message }
-    ],
-  },
-  {
-    headers: {
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
-    }
+  if (req.method === "OPTIONS") {
+    res.statusCode = 204;
+    return res.end();
   }
-);
 
-
-    return res.status(200).json(response.data);
-  } catch (err) {
-    return res.status(500).json({ error: err.message });
-  }
-}
+  const app = require("../dist/index.js").default;
+  return app(req, res);
+};
