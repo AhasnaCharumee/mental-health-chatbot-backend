@@ -5,8 +5,7 @@
 const DEFAULT_ALLOWLIST = [
   'http://localhost:3001',
   'http://localhost:3000',
-  'https://mental-health-chatbot-frontend-biwcaeoc7.vercel.app',
-  'https://mental-health-chatbot-frontend-beta.vercel.app'
+  'https://mental-health-chatbot-frontend-g1ginbxyr.vercel.app'
 ];
 
 function getAllowedOrigins() {
